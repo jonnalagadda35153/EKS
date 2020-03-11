@@ -1,0 +1,1 @@
+Files in the folder are reference files for EKS application deployment.

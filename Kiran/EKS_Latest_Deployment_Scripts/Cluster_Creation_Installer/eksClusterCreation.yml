@@ -1,0 +1,55 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: EKS-MultiTenant-Clsuter
+  region: us-west-2
+
+vpc:
+  id: "vpc-04e45ad665dc0b27d"  # (optional, must match VPC ID used for each subnet below)
+  cidr: "10.2.0.0/16"       # (optional, must match CIDR used by the given VPC)
+  subnets:
+    # must provide 'private' and/or 'public' subnets by availibility zone as shown
+    private:
+      us-west-2a:
+        id: "subnet-0c6e3417b3de8a2be"
+        cidr: "10.2.12.0/24" # (optional, must match CIDR used by the given subnet)
+
+      us-west-2b:
+        id: "subnet-0ab19167e8efb86b5"
+        cidr: "10.2.13.0/24"  # (optional, must match CIDR used by the given subnet)
+        
+nodeGroups:
+  - name: eks-private-workloads-tenantone
+    instanceType: m5.large
+    desiredCapacity: 2
+    minSize: 2
+    maxSize: 3
+    labels:
+      nodegroup-type: tenantone-backend-workloads
+      eks.com/tenantone: 'true'
+    privateNetworking: true
+    tags:
+       environment: eks.com
+       k8s.io/cluster-autoscaler/node-template/taint/dedicated: eks.com/tenantone=true
+       k8s.io/cluster-autoscaler/node-template/label/eks.com/tenantone: 'true'
+       k8s.io/cluster-autoscaler/enabled: 'true'
+    taints:
+      eks.com/tenantone: "true:NoSchedule"
+  - name: eks-private-workloads-tenanttwo
+    instanceType: m5.large
+    desiredCapacity: 2
+    minSize: 2
+    maxSize: 3
+    labels:
+      nodegroup-type: tenanttwo-backend-workloads
+      eks.com/tenanttwo: 'true'
+    privateNetworking: true
+    tags:
+       environment: eks.com
+       k8s.io/cluster-autoscaler/node-template/taint/dedicated: eks.com/tenanttwo=true
+       k8s.io/cluster-autoscaler/node-template/label/eks.com/tenanttwo: 'true'
+       k8s.io/cluster-autoscaler/enabled: 'true'
+    taints:
+      eks.com/tenanttwo: "true:NoSchedule"
+      

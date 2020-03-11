@@ -1,0 +1,2 @@
+Update 
+namespcae, role_name, policy_name, els_cluster_name, region, user in the iam.ini file before executing the python script
