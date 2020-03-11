@@ -1,0 +1,27 @@
+---
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  namespace: tenanttwonamespace
+  name: tenanttwonamespace-full-right
+rules:
+- apiGroups: ["*"]
+  resources: ["*"]
+  verbs: ["*"]
+- apiGroups: ["*"]
+  resources: ["*"]
+  verbs: ["*"]
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: tenanttwonamespace-full-right-binding
+  namespace: tenanttwonamespace
+subjects:
+- kind: User
+  name: admin-tenanttwonamespace
+  apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: Role
+  name: tenanttwonamespace-full-right
+  apiGroup: rbac.authorization.k8s.io
